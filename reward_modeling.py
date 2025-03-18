@@ -196,6 +196,124 @@ CUDA_VISIBLE_DEVICES=3,2,1,0 nohup python reward_modeling.py \
     &> mistral-v0.3-7b-rm-self-human.log &
 
 
+llama-3.1-8b hyper-parameters: https://huggingface.co/allenai/llama-3.1-tulu-2-8b-uf-mean-rm
+
+CUDA_VISIBLE_DEVICES=4,5,6,7 nohup python reward_modeling.py \
+    --model_name_or_path AmberYifan/Llama-3.1-8B-sft-ultrachat-safeRLHF \
+    --dataset_name preference_datasets/Llama-3.1-8B-sft-generated_10k/human \
+    --output_dir lblaoke/llama-3.1-8b-rm-human \
+    --per_device_train_batch_size 1 \
+    --per_device_eval_batch_size 1 \
+    --gradient_accumulation_steps 16 \
+    --num_train_epochs 1 \
+    --gradient_checkpointing True \
+    --optim adamw_torch_fused \
+    --lr_scheduler_type linear \
+    --learning_rate 5e-6 \
+    --warmup_ratio 0.03 \
+    --eval_strategy steps \
+    --logging_steps 10 \
+    --eval_steps 100 \
+    --max_length 1024 \
+    &> llama-3.1-8b-rm-human.log &
+
+CUDA_VISIBLE_DEVICES=7,6,5,4 nohup python reward_modeling.py \
+    --model_name_or_path AmberYifan/Llama-3.1-8B-sft-ultrachat-safeRLHF \
+    --dataset_name preference_datasets/Llama-3.1-8B-sft-generated_10k/self \
+    --output_dir lblaoke/llama-3.1-8b-rm-self \
+    --per_device_train_batch_size 1 \
+    --per_device_eval_batch_size 1 \
+    --gradient_accumulation_steps 16 \
+    --num_train_epochs 1 \
+    --gradient_checkpointing True \
+    --optim adamw_torch_fused \
+    --lr_scheduler_type linear \
+    --learning_rate 5e-6 \
+    --warmup_ratio 0.03 \
+    --eval_strategy steps \
+    --logging_steps 10 \
+    --eval_steps 100 \
+    --max_length 1024 \
+    &> llama-3.1-8b-rm-self.log &
+
+CUDA_VISIBLE_DEVICES=3,2,1,0 nohup python reward_modeling.py \
+    --model_name_or_path AmberYifan/Llama-3.1-8B-sft-ultrachat-safeRLHF \
+    --dataset_name preference_datasets/Llama-3.1-8B-sft-generated_10k/self-human \
+    --output_dir lblaoke/llama-3.1-8b-rm-self-human \
+    --per_device_train_batch_size 1 \
+    --per_device_eval_batch_size 1 \
+    --gradient_accumulation_steps 16 \
+    --num_train_epochs 1 \
+    --gradient_checkpointing True \
+    --optim adamw_torch_fused \
+    --lr_scheduler_type linear \
+    --learning_rate 5e-6 \
+    --warmup_ratio 0.03 \
+    --eval_strategy steps \
+    --logging_steps 10 \
+    --eval_steps 100 \
+    --max_length 1024 \
+    &> llama-3.1-8b-rm-self-human.log &
+
+qwen2.5-7b hyper-parameters: deepseek
+
+CUDA_VISIBLE_DEVICES=5,6,7,1 nohup python reward_modeling.py \
+    --model_name_or_path AmberYifan/Qwen2.5-7B-sft-ultrachat-safeRLHF \
+    --dataset_name preference_datasets/Qwen2.5-7B-sft_generated_10k/human \
+    --output_dir lblaoke/qwen2.5-7b-rm-human \
+    --per_device_train_batch_size 1 \
+    --per_device_eval_batch_size 1 \
+    --gradient_accumulation_steps 16 \
+    --num_train_epochs 1 \
+    --gradient_checkpointing True \
+    --optim adamw_torch_fused \
+    --lr_scheduler_type linear \
+    --learning_rate 5e-6 \
+    --warmup_ratio 0.03 \
+    --eval_strategy steps \
+    --logging_steps 10 \
+    --eval_steps 100 \
+    --max_length 1024 \
+    &> qwen2.5-7b-rm-human.log &
+
+CUDA_VISIBLE_DEVICES=7,6,5,1 nohup python reward_modeling.py \
+    --model_name_or_path AmberYifan/Qwen2.5-7B-sft-ultrachat-safeRLHF \
+    --dataset_name preference_datasets/Qwen2.5-7B-sft_generated_10k/self \
+    --output_dir lblaoke/qwen2.5-7b-rm-self \
+    --per_device_train_batch_size 1 \
+    --per_device_eval_batch_size 1 \
+    --gradient_accumulation_steps 16 \
+    --num_train_epochs 1 \
+    --gradient_checkpointing True \
+    --optim adamw_torch_fused \
+    --lr_scheduler_type linear \
+    --learning_rate 5e-6 \
+    --warmup_ratio 0.03 \
+    --eval_strategy steps \
+    --logging_steps 10 \
+    --eval_steps 100 \
+    --max_length 1024 \
+    &> qwen2.5-7b-rm-self.log &
+
+CUDA_VISIBLE_DEVICES=7,6,5,1 nohup python reward_modeling.py \
+    --model_name_or_path AmberYifan/Qwen2.5-7B-sft-ultrachat-safeRLHF \
+    --dataset_name preference_datasets/Qwen2.5-7B-sft_generated_10k/self-human \
+    --output_dir lblaoke/qwen2.5-7b-rm-self-human \
+    --per_device_train_batch_size 1 \
+    --per_device_eval_batch_size 1 \
+    --gradient_accumulation_steps 16 \
+    --num_train_epochs 1 \
+    --gradient_checkpointing True \
+    --optim adamw_torch_fused \
+    --lr_scheduler_type linear \
+    --learning_rate 5e-6 \
+    --warmup_ratio 0.03 \
+    --eval_strategy steps \
+    --logging_steps 10 \
+    --eval_steps 100 \
+    --max_length 1024 \
+    &> qwen2.5-7b-rm-self-human.log &
+
 Model Upload: huggingface-cli upload-large-folder --repo-type=model lblaoke/xxx ./xxx
 """
 
@@ -255,10 +373,13 @@ if __name__ == "__main__":
     data_files = {"train": "train.jsonl", "test": "test.jsonl"}
     dataset = load_dataset(script_args.dataset_name, data_files=data_files)
 
-    dataset["train"] = dataset["train"].rename_column("real", "chosen")
-    dataset["train"] = dataset["train"].rename_column("generated", "rejected")
-    dataset["test"] = dataset["test"].rename_column("real", "chosen")
-    dataset["test"] = dataset["test"].rename_column("generated", "rejected")
+    # dataset["train"] = dataset["train"].rename_column("real", "chosen")
+    # dataset["train"] = dataset["train"].rename_column("generated", "rejected")
+    # dataset["test"] = dataset["test"].rename_column("real", "chosen")
+    # dataset["test"] = dataset["test"].rename_column("generated", "rejected")
+
+    dataset["train"] = dataset["train"].remove_columns("prompt")
+    dataset["test"] = dataset["test"].remove_columns("prompt")
 
     ##########
     # Training
