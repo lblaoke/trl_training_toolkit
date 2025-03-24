@@ -13,21 +13,7 @@
 # limitations under the License.
 
 """
-# Full training
-CUDA_VISIBLE_DEVICES=0,1,2,3 nohup python dpo.py \
-    --dataset_name Skywork/Skywork-Reward-Preference-80K-v0.1 \
-    --model_name_or_path turboderp/Qwama-0.5B-Instruct \
-    --learning_rate 5.0e-7 \
-    --num_train_epochs 1 \
-    --per_device_train_batch_size 2 \
-    --gradient_accumulation_steps 8 \
-    --gradient_checkpointing False \
-    --logging_steps 50 \
-    --output_dir qwama-0.5b-skywork-preference-dpo \
-    --no_remove_unused_columns \
-    &> qwama-0.5b-skywork-preference-dpo.log &
-
-# LoRA:
+# LoRA
 python trl/scripts/dpo.py \
     --dataset_name Skywork/Skywork-Reward-Preference-80K-v0.1 \
     --model_name_or_path turboderp/Qwama-0.5B-Instruct \
@@ -44,6 +30,22 @@ python trl/scripts/dpo.py \
     --use_peft \
     --lora_r 32 \
     --lora_alpha 16
+
+# Full training
+CUDA_VISIBLE_DEVICES=0,1,2,3 nohup python dpo.py \
+    --dataset_name Skywork/Skywork-Reward-Preference-80K-v0.1 \
+    --model_name_or_path turboderp/Qwama-0.5B-Instruct \
+    --learning_rate 5.0e-6 \
+    --num_train_epochs 4 \
+    --per_device_train_batch_size 2 \
+    --gradient_accumulation_steps 8 \
+    --gradient_checkpointing False \
+    --logging_steps 50 \
+    --output_dir lblaoke/qwama-0.5b-skywork-pref-dpo-trl-v2 \
+    --no_remove_unused_columns \
+    &> qwama-0.5b-skywork-pref-dpo-trl-v2.log &
+
+huggingface-cli upload-large-folder --repo-type=model lblaoke/xxx ./xxx
 """
 
 import argparse
@@ -74,12 +76,13 @@ def main(script_args, training_args, model_args):
     )
     quantization_config = get_quantization_config(model_args)
     model_kwargs = dict(
-        revision=model_args.model_revision,
-        attn_implementation=model_args.attn_implementation,
-        torch_dtype=torch_dtype,
-        use_cache=False if training_args.gradient_checkpointing else True,
-        device_map=get_kbit_device_map() if quantization_config is not None else 'auto',
-        quantization_config=quantization_config,
+        revision = model_args.model_revision,
+        attn_implementation = 'flash_attention_2',
+        torch_dtype = torch_dtype if quantization_config is not None else torch.bfloat16,
+        # use_cache = False if training_args.gradient_checkpointing else True,
+        use_cache = False,
+        device_map = get_kbit_device_map() if quantization_config is not None else 'auto',
+        quantization_config = quantization_config,
     )
     model = AutoModelForCausalLM.from_pretrained(
         model_args.model_name_or_path, trust_remote_code=model_args.trust_remote_code, **model_kwargs
@@ -94,6 +97,7 @@ def main(script_args, training_args, model_args):
     tokenizer = AutoTokenizer.from_pretrained(
         model_args.model_name_or_path, trust_remote_code=model_args.trust_remote_code
     )
+
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
     if tokenizer.chat_template is None:
