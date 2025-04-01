@@ -35,8 +35,8 @@ python trl/scripts/dpo.py \
 CUDA_VISIBLE_DEVICES=0,1,2,3 nohup python dpo.py \
     --dataset_name Skywork/Skywork-Reward-Preference-80K-v0.1 \
     --model_name_or_path turboderp/Qwama-0.5B-Instruct \
-    --learning_rate 5.0e-6 \
-    --num_train_epochs 4 \
+    --learning_rate 5.0e-7 \
+    --num_train_epochs 1 \
     --per_device_train_batch_size 2 \
     --gradient_accumulation_steps 8 \
     --gradient_checkpointing False \
@@ -44,6 +44,32 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 nohup python dpo.py \
     --output_dir lblaoke/qwama-0.5b-skywork-pref-dpo-trl-v2 \
     --no_remove_unused_columns \
     &> qwama-0.5b-skywork-pref-dpo-trl-v2.log &
+
+CUDA_VISIBLE_DEVICES=0,1 nohup python dpo.py \
+    --dataset_name Skywork/Skywork-Reward-Preference-80K-v0.1 \
+    --model_name_or_path lblaoke/qwama-0.5b-skywork-pref-sft-chosen-trl-v3 \
+    --learning_rate 5.0e-7 \
+    --num_train_epochs 1 \
+    --per_device_train_batch_size 2 \
+    --gradient_accumulation_steps 16 \
+    --gradient_checkpointing False \
+    --logging_steps 50 \
+    --output_dir qwama-0.5b-skywork-pref-sft-chosen-dpo-trl-v3 \
+    --no_remove_unused_columns \
+    &> qwama-0.5b-skywork-pref-sft-chosen-dpo-trl-v3.log &
+
+CUDA_VISIBLE_DEVICES=1,0 nohup python dpo.py \
+    --dataset_name Skywork/Skywork-Reward-Preference-80K-v0.1 \
+    --model_name_or_path lblaoke/qwama-0.5b-skywork-pref-sft-rejected-chosen-trl-v3 \
+    --learning_rate 5.0e-7 \
+    --num_train_epochs 1 \
+    --per_device_train_batch_size 2 \
+    --gradient_accumulation_steps 16 \
+    --gradient_checkpointing False \
+    --logging_steps 50 \
+    --output_dir qwama-0.5b-skywork-pref-sft-rejected-chosen-dpo-trl-v3 \
+    --no_remove_unused_columns \
+    &> qwama-0.5b-skywork-pref-sft-rejected-chosen-dpo-trl-v3.log &
 
 huggingface-cli upload-large-folder --repo-type=model lblaoke/xxx ./xxx
 """
